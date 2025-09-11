@@ -3,16 +3,8 @@
 
 #define M_PI 3.14159265358979323846
 
-struct Point3D
-{
-	double x, y, z;
-	Point3D(double x, double y, double z) : x(x), y(y), z(z) {}
-};
-
-struct Vector3D {
-	double x, y, z;
-	Vector3D(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z) {}
-};
+typedef Vector3 Point3D;
+typedef Vector3 Vector3D;
 
 class Curve
 {	
