@@ -1,4 +1,6 @@
 ﻿#include <raylib.h>
+#include "Curve.h"
+#include "Circle.h"
 
 int main()
 {
@@ -11,8 +13,6 @@ int main()
     camera.up = Vector3{ 0.0f, 1.0f, 0.0f };
     camera.fovy = 45.0f;
     camera.projection = CAMERA_PERSPECTIVE;
-
-    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 
     DisableCursor();
 
@@ -29,9 +29,6 @@ int main()
         ClearBackground(RAYWHITE);
 
         BeginMode3D(camera);
-
-        DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-        DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
 
         DrawGrid(10, 1.0f);
 
