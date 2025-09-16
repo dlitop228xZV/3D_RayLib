@@ -1,11 +1,11 @@
 ﻿#include <raylib.h>
 #include "Curve.h"
 #include "Circle.h"
+#include "Ellipse.h"
 
 int main()
 {
     InitWindow(1280, 960, "3D Project");
-
     
     Camera3D camera = { 0 };
     camera.position = Vector3{ 10.0f, 10.0f, 10.0f };

@@ -64,8 +64,6 @@ void Ellipse::Draw(double t, const Point3D& position) const
         (float)(pointPos.y + derivative.y * 0.3),
         (float)(pointPos.z + derivative.z * 0.3)
     };
-
-    DrawLine3D(pointPos, endPoint, GREEN);
 }
 
 
