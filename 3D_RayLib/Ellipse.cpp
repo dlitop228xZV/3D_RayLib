@@ -4,7 +4,7 @@
 #include <math.h>
 #include <iostream>
 
-Ellipse::Ellipse(double rx, double ry)
+Ellipse::Ellipse(double rx, double ry) : radiusX(rx), radiusY(ry)
 {
     if (rx <= 0) std::cout << "!---Radius X must be positive---!" << std::endl;
     if (ry <= 0) std::cout << "!---Radius Y must be positive---!" << std::endl;
