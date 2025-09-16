@@ -11,12 +11,12 @@ Circle::Circle(double r) : radius(r)
 
 Point3D Circle::GetPoint(double t) const
 {
-	return Point3D(radius * cos(t), radius * sin(t), 0);
+    return Point3D{ (float)(radius * cos(t)), (float)(radius * sin(t)), 0.0 };
 }
 
 Vector3D Circle::GetDerivative(double t) const
 {
-	return Vector3D(-radius * sin(t), radius * cos(t), 0);
+    return Vector3D{ (float)(-radius * sin(t)), (float)(radius * cos(t)), 0.0 };
 }
 
 double Circle::GetRadius() const
