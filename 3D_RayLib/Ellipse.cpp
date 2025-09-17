@@ -46,7 +46,7 @@ void Ellipse::Draw(double t, const Point3D& position) const
             (float)position.z
         };
 
-        DrawLine3D(v1, v2, BLUE);
+        DrawLine3D(v1, v2, GREEN);
     }
 
     Point3D current = GetPoint(t);

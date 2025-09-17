@@ -46,7 +46,7 @@ void Helixes::Draw(double t, const Point3D& position) const
             (float)position.z + step * angle1 / (2 * M_PI)
         };
 
-        DrawLine3D(v1, v2, BLUE);
+        DrawLine3D(v1, v2, ORANGE);
     }
 
     Point3D current = GetPoint(t);
