@@ -2,11 +2,17 @@
 #include "Curve.h"
 #include "Circle.h"
 #include "Ellipse.h"
+#include "Helixes.h"
 
 int main()
 {
     InitWindow(1280, 960, "3D Project");
-    
+
+    Circle circle(2);
+    Ellipse ellipse(3, 1.5);
+    Helixes helixes(3, 1.5);
+    double t = 0;
+
     Camera3D camera = { 0 };
     camera.position = Vector3{ 10.0f, 10.0f, 10.0f };
     camera.target = Vector3{ 0.0f, 0.0f, 0.0f };
@@ -20,6 +26,10 @@ int main()
 
     while (!WindowShouldClose())
     {
+        t += 0.01;
+        if (t > 2 * PI)
+            t -= 2 * PI;
+
         UpdateCamera(&camera, CAMERA_FREE);
 
         if (IsKeyPressed('Z')) camera.target = Vector3{ 0.0f, 0.0f, 0.0f };
@@ -31,6 +41,10 @@ int main()
         BeginMode3D(camera);
 
         DrawGrid(10, 1.0f);
+
+        circle.Draw(t, { -3,0,0 });
+        ellipse.Draw(t, { 3,0,0 });
+        helixes.Draw(t, { 0,3,0 });
 
         EndMode3D();
 
