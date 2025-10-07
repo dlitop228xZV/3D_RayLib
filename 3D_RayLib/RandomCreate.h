@@ -4,6 +4,7 @@
 #include "Ellipse.h"
 #include "Helixes.h"
 #include <raylib.h>
+#include <memory>
 #include <vector>
 
 class RandomCreate
@@ -14,14 +15,12 @@ private:
 	double random();
 public:
 
-	Curve* createRandomCurve();
+	std::shared_ptr<Curve> createRandomCurve();
 
-	Circle* createRandomCircle();
-	Ellipse* createRandomEllipse();
-	Helixes* createRandomHelix();
+	std::shared_ptr<Circle> createRandomCircle();
+	std::shared_ptr<Ellipse> createRandomEllipse();
+	std::shared_ptr<Helixes> createRandomHelix();
 
-	std::vector<Curve*> createRandomCurves(int count);
-
-	void deletedCurve(std::vector<Curve*>& curves);
+	std::vector<std::shared_ptr<Curve>> createRandomCurves(int count);
 };
 

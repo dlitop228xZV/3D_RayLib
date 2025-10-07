@@ -1,14 +1,12 @@
 #include "RandomCreate.h"
-
+#include <cstdlib>
 
 double RandomCreate::random()
 {
-	//double r = GetRandomValue(min, max);
-	double r = 1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (5 - 1)));
-	return r;
+	return 1 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (5 - 1)));
 }
 
-Curve* RandomCreate::createRandomCurve()
+std::shared_ptr<Curve> RandomCreate::createRandomCurve()
 {
 	int Rcurve = GetRandomValue(0, 2);
 
@@ -25,36 +23,28 @@ Curve* RandomCreate::createRandomCurve()
 	}
 }
 
-Circle* RandomCreate::createRandomCircle()
+std::shared_ptr<Circle> RandomCreate::createRandomCircle()
 {
-	return new Circle(random());
+	return std::make_shared<Circle>(random());
 }
 
-Ellipse* RandomCreate::createRandomEllipse()
+std::shared_ptr<Ellipse> RandomCreate::createRandomEllipse()
 {
-	return new Ellipse(random(), random());
+	return std::make_shared<Ellipse>(random(), random());
 }
 
-Helixes* RandomCreate::createRandomHelix()
+std::shared_ptr<Helixes> RandomCreate::createRandomHelix()
 {
-	return new Helixes(random(), random());
+	return std::make_shared<Helixes>(random(), random());
 }
 
-std::vector<Curve*> RandomCreate::createRandomCurves(int count)
+std::vector<std::shared_ptr<Curve>> RandomCreate::createRandomCurves(int count)
 {
-	std::vector<Curve*> curves;
-
+	std::vector<std::shared_ptr<Curve>> curves;
 	for (int i = 0; i < count; i++)
 	{
-		Curve* c = createRandomCurve();
+		auto c = createRandomCurve();
 		if (c) curves.push_back(c);
 	}
 	return curves;
-}
-
-
-
-void RandomCreate::deletedCurve(std::vector<Curve*>& curves)
-{
-	curves.clear();
 }
