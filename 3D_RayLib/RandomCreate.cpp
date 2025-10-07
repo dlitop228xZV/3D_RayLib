@@ -3,7 +3,8 @@
 
 double RandomCreate::random()
 {
-	double r = GetRandomValue(min, max);
+	//double r = GetRandomValue(min, max);
+	double r = 1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (5 - 1)));
 	return r;
 }
 
