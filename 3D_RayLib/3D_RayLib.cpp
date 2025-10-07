@@ -151,6 +151,8 @@ int main()
         EndDrawing();
     }
 
+    RC.deletedCurve(curves);
+    circlesOnly.clear();
 
     CloseWindow();
 
