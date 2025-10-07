@@ -1,7 +1,7 @@
 #pragma once
 #include "Curve.h"
 
-class Ellipse : protected Curve
+class Ellipse : public Curve
 {
 private:
 	double radiusX, radiusY;

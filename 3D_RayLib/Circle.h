@@ -1,6 +1,6 @@
 #pragma once
 #include "Curve.h"
-class Circle : protected Curve
+class Circle : public Curve
 {
 private:
 	double radius;

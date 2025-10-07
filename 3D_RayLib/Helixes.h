@@ -1,6 +1,6 @@
 #pragma once
 #include "Curve.h"
-class Helixes : protected Curve
+class Helixes : public Curve
 {
 private:
 	double radius, step;
