@@ -5,12 +5,8 @@
 #include "Helixes.h"
 #include "RandomCreate.h"
 
-#include <iostream>
-
 int main()
 {
-    setlocale(LC_ALL, "RUS");
-
     InitWindow(1280, 960, "3D Project");
 
     Circle circle(2);
@@ -22,18 +18,34 @@ int main()
     RandomCreate RC;
     int index = 0;
     const int numCurve = 10;
+
+    enum DRAW {ALL,ONLY_CIRCLE};
+    int currentDraw = 0;
+
     std::vector<Curve*> curves = RC.createRandomCurves(numCurve);
+    std::vector<Circle*> circlesOnly;
 
-
-    if (curves.empty()) {
-        std::cerr << "\n\tВектор пуст\n\n";
-        return 404;
+    for (int i = 0; i < curves.size(); ++i)
+    {
+        Circle* circle = dynamic_cast<Circle*>(curves[i]);
+        if (circle)
+        {
+            circlesOnly.push_back(circle);
+        }
     }
-    else {
-        std::cerr << "\n\tВектор не пуст\n\n";
-        std::cerr << curves.size() << '\n';
-    }
 
+    for (int i = 0; i < circlesOnly.size() - 1; ++i)
+    {
+        for (int j = 0; j < circlesOnly.size() - i - 1; ++j)
+        {
+            if (circlesOnly[j]->GetRadius() > circlesOnly[j + 1]->GetRadius())
+            {
+                Circle* temp = circlesOnly[j];
+                circlesOnly[j] = circlesOnly[j + 1];
+                circlesOnly[j + 1] = temp;
+            }
+        }
+    }
 
     Camera3D camera = { 0 };
     camera.position = Vector3{ 10.0f, 10.0f, 10.0f };
@@ -51,6 +63,17 @@ int main()
         t += 0.01;
         if (t > turns * 2 * PI)
             t -= turns * 2 * PI;
+
+        if (IsKeyPressed(KEY_ONE))
+        {
+            index = 0;
+            currentDraw = ALL;
+        }
+        if (IsKeyPressed(KEY_TWO))
+        {
+            index = 0;
+            currentDraw = ONLY_CIRCLE;
+        }
 
         UpdateCamera(&camera, CAMERA_FREE); 
 
@@ -77,19 +100,29 @@ int main()
 
         DrawGrid(10, 1.0f);
 
-        if (!curves.empty() && index >= 0 && index < (int)curves.size())
+        switch (currentDraw)
         {
+        case ALL:
             curves[index]->Draw(t, { 0, 0, 0 });
             if (dynamic_cast<Helixes*>(curves[index]))
                 turns = 2;
             else
                 turns = 1;
+            break;
+        case ONLY_CIRCLE:
+            if(!circlesOnly.empty() && index < circlesOnly.size())
+                circlesOnly[index]->Draw(t, { 0, 0, 0 });
+            if (index > circlesOnly.size()-1)
+                index = 0;
+        default:
+            break;
         }
+        
 
         EndMode3D();
 
-        DrawRectangle(10, 10, 320, 133, Fade(SKYBLUE, 0.5f));
-        DrawRectangleLines(10, 10, 320, 133, BLUE);
+        DrawRectangle(10, 10, 320, 193, Fade(SKYBLUE, 0.5f));
+        DrawRectangleLines(10, 10, 320, 193, BLUE);
 
         DrawText("Free camera default controls:", 20, 20, 10, BLACK);
         DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, DARKGRAY);
@@ -98,6 +131,22 @@ int main()
         DrawText("LEFT - RIGHT", 20, 100, 10, BLACK);
         DrawText(TextFormat("- Index: %d", index), 40, 120, 10, DARKGRAY);
 
+        if(currentDraw == ALL)
+        {
+            Vector3 p = curves[index]->GetPoint(t);
+            DrawText(TextFormat("- Point: (%.2f, %.2f, %.2f)", p.x, p.y, p.z), 40, 140, 10, DARKGRAY);
+            Vector3 d = curves[index]->GetDerivative(t);
+            DrawText(TextFormat("- Derivative: (%.2f, %.2f, %.2f)", d.x, d.y, d.z), 40, 160, 10, DARKGRAY);
+            DrawText(TextFormat("- Radius: %.2f", curves[index]->GetRadius()), 40, 180, 10, DARKGRAY);
+        }
+        else if(currentDraw == ONLY_CIRCLE && !circlesOnly.empty() && index < circlesOnly.size())
+            {
+                Vector3 p = circlesOnly[index]->GetPoint(t);
+                DrawText(TextFormat("- Point: (%.2f, %.2f, %.2f)", p.x, p.y, p.z), 40, 140, 10, DARKGRAY);
+                Vector3 d = circlesOnly[index]->GetDerivative(t);
+                DrawText(TextFormat("- Derivative: (%.2f, %.2f, %.2f)", d.x, d.y, d.z), 40, 160, 10, DARKGRAY);
+                DrawText(TextFormat("- Radius: %.2f", circlesOnly[index]->GetRadius()), 40, 180, 10, DARKGRAY);
+            }
 
         EndDrawing();
     }
