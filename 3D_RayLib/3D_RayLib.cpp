@@ -40,8 +40,8 @@ int main()
 	for (const auto& circle : circlesOnly)
 		totalRadius += circle->GetRadius();
 
-	// ✳️ Печать значений в консоль (требование 3)
-	std::cout << "=== Values at t = PI / 4 ===\n";
+	// Печать значений в консоль (требование 3)
+	std::cout << "\n\n";
 	for (size_t i = 0; i < curves.size(); ++i)
 	{
 		Vector3 p = curves[i]->GetPoint(PI / 4);
@@ -50,6 +50,7 @@ int main()
 		std::cout << "  Point: (" << p.x << ", " << p.y << ", " << p.z << ")\n";
 		std::cout << "  Derivative: (" << d.x << ", " << d.y << ", " << d.z << ")\n";
 	}
+	std::cout << "\n\n";
 
 	Camera3D camera = { 0 };
 	camera.position = Vector3{ 10.0f, 10.0f, 10.0f };
