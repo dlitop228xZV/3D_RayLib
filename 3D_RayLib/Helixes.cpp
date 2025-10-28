@@ -16,7 +16,7 @@ Point3D Helixes::GetPoint(double t) const
 
 Vector3D Helixes::GetDerivative(double t) const
 {
-    return Vector3D{ (float)(-radius * sin(t)), (float)(radius * cos(t)), (float)(step * t / (2 * M_PI)) };
+    return Vector3D{ (float)(-radius * sin(t)), (float)(radius * cos(t)), (float)(step / (2 * M_PI)) };
 }
 
 double Helixes::GetRadius() const
