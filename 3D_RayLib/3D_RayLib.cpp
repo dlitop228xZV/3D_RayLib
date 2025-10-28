@@ -92,7 +92,14 @@ int main()
 		case ONLY_CIRCLE:
 			if (!circlesOnly.empty() && index < circlesOnly.size())
 				circlesOnly[index]->Draw(t, { 0, 0, 0 });
-			if (index >= circlesOnly.size()) index = 0;
+			if (!circlesOnly.empty() && index < circlesOnly.size())
+			{
+				circlesOnly[index]->Draw(t, { 0, 0, 0 });
+			}
+			else
+			{
+				index = 0;
+			}
 			break;
 		default:
 			break;
