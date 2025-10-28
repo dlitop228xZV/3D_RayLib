@@ -43,7 +43,7 @@ void Helixes::Draw(double t, const Point3D& position) const
         Vector3 v2 = {
             (float)(position.x + radius * cos(angle2)),
             (float)(position.y + radius * sin(angle2)),
-            (float)position.z + step * angle1 / (2 * M_PI)
+            (float)position.z + step * angle2 / (2 * M_PI)
         };
 
         DrawLine3D(v1, v2, ORANGE);
