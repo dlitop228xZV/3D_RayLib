@@ -24,7 +24,7 @@ Vector3D Helixes::GetDerivative(double t) const
 
 double Helixes::GetRadius() const
 {
-    return radius;
+    return 0.0;
 }
 
 void Helixes::Draw(double t, const Point3D& position, float rotationAngle) const
@@ -47,6 +47,7 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle) const
         return { xr, point.y, zr };
         };
 
+    // Рисуем саму спираль
     for (int i = 0; i < segments * turns; i++) {
         float angle1 = i * angleStep;
         float angle2 = (i + 1) * angleStep;
@@ -63,4 +64,20 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle) const
 
         DrawLine3D(v1, v2, ORANGE);
     }
+
+    // Рисуем шар в текущей точке t
+    Point3D current = GetPoint(t);
+    Vector3 pointPos = { position.x + current.x, position.y + current.y, position.z + current.z };
+    pointPos = RotateY(pointPos, rotationAngle, position);
+
+    DrawSphere(pointPos, 0.1f, RED);
+
+    // Рисуем производную (касательный вектор)
+    Vector3D derivative = GetDerivative(t);
+    Vector3 endPoint = { pointPos.x + derivative.x * 0.3f,
+                         pointPos.y + derivative.y * 0.3f,
+                         pointPos.z + derivative.z * 0.3f };
+    endPoint = RotateY(endPoint, rotationAngle, position);
+
+    DrawLine3D(pointPos, endPoint, BLACK);
 }
