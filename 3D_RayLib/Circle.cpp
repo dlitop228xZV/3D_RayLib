@@ -1,69 +1,70 @@
 #include "Circle.h"
-#include "Curve.h"
 #include <raylib.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
-
-Circle::Circle(double r) : radius(r)
-{
-	if (r <= 0) std::cout << "!---Radius must be positive---!" << std::endl;
-}
 
 Point3D Circle::GetPoint(double t) const
 {
-    return Point3D{ (float)(radius * cos(t)), (float)(radius * sin(t)), 0.0 };
+    return { (float)(radius * cos(t)), (float)(radius * sin(t)), 0.0f };
 }
 
 Vector3D Circle::GetDerivative(double t) const
 {
-    return Vector3D{ (float)(-radius * sin(t)), (float)(radius * cos(t)), 0.0 };
+    return { (float)(-radius * sin(t)), (float)(radius * cos(t)), 0.0f };
 }
 
 double Circle::GetRadius() const
 {
-	return radius;
+    return radius;
 }
 
-void Circle::Draw(double t, const Point3D& position) const
+void Circle::Draw(double t, const Point3D& position, float rotationAngle) const
 {
-	const int segments = 360;
-	const float angleStep = 2 * PI / segments;
+    const int segments = 360;
+    const float angleStep = 2 * PI / segments;
+
+    auto RotateY = [](const Vector3& point, float angleDeg, const Vector3& center) -> Vector3 {
+        float rad = angleDeg * (PI / 180.0f);
+        float cosA = cos(rad);
+        float sinA = sin(rad);
+
+        float x = point.x - center.x;
+        float z = point.z - center.z;
+
+        float xr = x * cosA - z * sinA + center.x;
+        float zr = x * sinA + z * cosA + center.z;
+
+        return { xr, point.y, zr };
+        };
 
     for (int i = 0; i < segments; i++) {
         float angle1 = i * angleStep;
         float angle2 = (i + 1) * angleStep;
 
-        Vector3 v1 = {
-            (float)(position.x + radius * cos(angle1)),
-            (float)(position.y + radius * sin(angle1)),
-            (float)position.z
-        };
+        Vector3 v1 = { position.x + (float)(radius * cos(angle1)),
+                       position.y + (float)(radius * sin(angle1)),
+                       position.z };
+        Vector3 v2 = { position.x + (float)(radius * cos(angle2)),
+                       position.y + (float)(radius * sin(angle2)),
+                       position.z };
 
-        Vector3 v2 = {
-            (float)(position.x + radius * cos(angle2)),
-            (float)(position.y + radius * sin(angle2)),
-            (float)position.z
-        };
+        v1 = RotateY(v1, rotationAngle, position);
+        v2 = RotateY(v2, rotationAngle, position);
 
         DrawLine3D(v1, v2, BLUE);
     }
 
     Point3D current = GetPoint(t);
-    Vector3 pointPos = {
-        (float)(position.x + current.x),
-        (float)(position.y + current.y),
-        (float)(position.z + current.z)
-    };
+    Vector3 pointPos = { position.x + current.x, position.y + current.y, position.z + current.z };
+    pointPos = RotateY(pointPos, rotationAngle, position);
 
     DrawSphere(pointPos, 0.1f, RED);
 
     Vector3D derivative = GetDerivative(t);
-    Vector3 endPoint = {
-        (float)(pointPos.x + derivative.x * 0.3),
-        (float)(pointPos.y + derivative.y * 0.3),
-        (float)(pointPos.z + derivative.z * 0.3)
-    };
+    Vector3 endPoint = { pointPos.x + derivative.x * 0.3f,
+                         pointPos.y + derivative.y * 0.3f,
+                         pointPos.z + derivative.z * 0.3f };
+    endPoint = RotateY(endPoint, rotationAngle, position);
+
     DrawLine3D(pointPos, endPoint, BLACK);
 }
-
-

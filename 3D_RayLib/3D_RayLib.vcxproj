@@ -132,6 +132,7 @@
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="Helixes.cpp" />
     <ClCompile Include="RandomCreate.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Circle.h" />
@@ -139,6 +140,7 @@
     <ClInclude Include="Ellipse.h" />
     <ClInclude Include="Helixes.h" />
     <ClInclude Include="RandomCreate.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

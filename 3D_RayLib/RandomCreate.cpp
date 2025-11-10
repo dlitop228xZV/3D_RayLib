@@ -3,7 +3,7 @@
 
 double RandomCreate::random()
 {
-	return 1 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / 4));
+	return 1 + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (5 - 1)));
 }
 
 std::shared_ptr<Curve> RandomCreate::createRandomCurve()
