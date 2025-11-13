@@ -14,7 +14,6 @@ class Helixes;
 class UI
 {
 private:
-    bool dropDownEdit = false;
 
     bool editRadius = false;
     bool editRadiusX = false;
@@ -70,6 +69,8 @@ private:
     void DrawPositionPanel();
 
 public:
+    UI();
+
     std::vector<std::shared_ptr<Curve>> customCurves;
     std::vector<std::shared_ptr<Circle>> customCircles;
     double totalRadius = 0;

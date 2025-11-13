@@ -6,6 +6,17 @@
 #include <algorithm>
 #include <string>
 
+UI::UI()
+{
+    // Устанавливаем непрозрачный фон для выпадающих списков
+    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, 0xFFFFFFFF);
+    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_FOCUSED, 0xFFDDDDDDFF);
+    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, 0xFFDDDDDDFF);
+    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, 0xFF000000FF);
+    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_FOCUSED, 0xFF000000FF);
+    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, 0xFF000000FF);
+}
+
 void UI::Draw()
 {
     DrawRectangleRec(main, LIGHTGRAY);
@@ -31,11 +42,18 @@ void UI::DrawCurveCreationPanel()
 
     GuiLabel({ panel.x + 10, panel.y + 40, 100, 25 }, "Curve Type:");
 
-    if (GuiDropdownBox({ panel.x + 120, panel.y + 40, 150, 25 },
-        "Circle;Ellipse;Helix", &selectedCurveType, dropDownEdit))
-    {
-        dropDownEdit = !dropDownEdit;
+    if (GuiButton({ panel.x + 120, panel.y + 40, 80, 25 }, "Circle")) {
+        selectedCurveType = 0;
     }
+    if (GuiButton({ panel.x + 210, panel.y + 40, 80, 25 }, "Ellipse")) {
+        selectedCurveType = 1;
+    }
+    if (GuiButton({ panel.x + 300, panel.y + 40, 80, 25 }, "Helix")) {
+        selectedCurveType = 2;
+    }
+
+    const char* curveTypes[] = { "Circle", "Ellipse", "Helix" };
+    DrawText(TextFormat("Selected: %s", curveTypes[selectedCurveType]), panel.x + 400, panel.y + 45, 16, DARKGRAY);
 
     // поля ввода
     switch (selectedCurveType) {
