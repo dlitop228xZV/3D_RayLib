@@ -14,6 +14,7 @@ class Helixes;
 class UI
 {
 private:
+    bool dropDownEdit = false;
 
     bool editRadius = false;
     bool editRadiusX = false;
@@ -28,6 +29,20 @@ private:
     bool editDirZ = false;
     bool editTilt = false;
 
+    float rotationXInput = 0.0f;
+    float rotationYInput = 1.0f;  // По умолчанию ось Y
+    float rotationZInput = 0.0f;
+    float rotationAngleInput = 0.0f;
+
+    bool editRotationX = false;
+    bool editRotationY = false;
+    bool editRotationZ = false;
+    bool editRotationAngle = false;
+
+    char rotationXInputText[32] = "0.0";
+    char rotationYInputText[32] = "1.0";
+    char rotationZInputText[32] = "0.0";
+    char rotationAngleInputText[32] = "0.0";
 
     float size = 800;
     Rectangle main = { 0,0,size,size };
@@ -69,8 +84,7 @@ private:
     void DrawPositionPanel();
 
 public:
-    UI();
-
+    Vector3D GetCurrentRotationAxis() const;
     std::vector<std::shared_ptr<Curve>> customCurves;
     std::vector<std::shared_ptr<Circle>> customCircles;
     double totalRadius = 0;

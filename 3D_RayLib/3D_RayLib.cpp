@@ -156,18 +156,18 @@ int main()
         {
         case ALL:
             if (index < curves.size()) {
-                curves[index]->Draw(t, { 0, 0, 0 });
+                curves[index]->Draw(t, { 0, 0, 0 }, ui.GetCurrentTilt(), ui.GetCurrentRotationAxis());
                 turns = (std::dynamic_pointer_cast<Helixes>(curves[index])) ? 2 : 1;
             }
             break;
         case ONLY_CIRCLE:
             if (!circlesOnly.empty() && index < circlesOnly.size()) {
-                circlesOnly[index]->Draw(t, { 0, 0, 0 });
+                circlesOnly[index]->Draw(t, { 0, 0, 0 }, ui.GetCurrentTilt(), ui.GetCurrentRotationAxis());
             }
             break;
         case CUSTOM:
             if (!ui.customCurves.empty() && index < ui.customCurves.size()) {
-                ui.customCurves[index]->Draw(t, customPosition);
+                ui.customCurves[index]->Draw(t, customPosition, ui.GetCurrentTilt(), ui.GetCurrentRotationAxis());
                 turns = (std::dynamic_pointer_cast<Helixes>(ui.customCurves[index])) ? 2 : 1;
             }
             break;

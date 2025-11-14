@@ -6,17 +6,6 @@
 #include <algorithm>
 #include <string>
 
-UI::UI()
-{
-    // ”станавливаем непрозрачный фон дл€ выпадающих списков
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_NORMAL, 0xFFFFFFFF);
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_FOCUSED, 0xFFDDDDDDFF);
-    GuiSetStyle(DROPDOWNBOX, BASE_COLOR_PRESSED, 0xFFDDDDDDFF);
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_NORMAL, 0xFF000000FF);
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_FOCUSED, 0xFF000000FF);
-    GuiSetStyle(DROPDOWNBOX, TEXT_COLOR_PRESSED, 0xFF000000FF);
-}
-
 void UI::Draw()
 {
     DrawRectangleRec(main, LIGHTGRAY);
@@ -42,18 +31,11 @@ void UI::DrawCurveCreationPanel()
 
     GuiLabel({ panel.x + 10, panel.y + 40, 100, 25 }, "Curve Type:");
 
-    if (GuiButton({ panel.x + 120, panel.y + 40, 80, 25 }, "Circle")) {
-        selectedCurveType = 0;
+    if (GuiDropdownBox({ panel.x + 120, panel.y + 40, 150, 25 },
+        "Circle;Ellipse;Helix", &selectedCurveType, dropDownEdit))
+    {
+        dropDownEdit = !dropDownEdit;
     }
-    if (GuiButton({ panel.x + 210, panel.y + 40, 80, 25 }, "Ellipse")) {
-        selectedCurveType = 1;
-    }
-    if (GuiButton({ panel.x + 300, panel.y + 40, 80, 25 }, "Helix")) {
-        selectedCurveType = 2;
-    }
-
-    const char* curveTypes[] = { "Circle", "Ellipse", "Helix" };
-    DrawText(TextFormat("Selected: %s", curveTypes[selectedCurveType]), panel.x + 400, panel.y + 45, 16, DARKGRAY);
 
     // пол€ ввода
     switch (selectedCurveType) {
@@ -121,8 +103,8 @@ void UI::DrawCurveCreationPanel()
 
 void UI::DrawPositionPanel()
 {
-    Rectangle panel = { main.x + 20, main.y + 240, main.width - 40, 180 };
-    DrawRectangleRec(panel, Fade(WHITE, 0.8f));
+    Rectangle panel = { main.x + 20, main.y + 240, main.width - 40, 240 };
+    DrawRectangleRec(panel, WHITE);
     DrawRectangleLinesEx(panel, 1, DARKGRAY);
 
     DrawText("Position & Orientation", panel.x + 10, panel.y + 10, 20, BLACK);
@@ -143,39 +125,62 @@ void UI::DrawPositionPanel()
         editPosZ = !editPosZ;
     posZInput = atof(posZInputText);
 
-    // --- Direction ---
-    GuiLabel({ panel.x + 10, panel.y + 75, 80, 25 }, "Direction X:");
-    if (GuiTextBox({ panel.x + 100, panel.y + 75, 80, 25 }, dirXInputText, 32, editDirX))
-        editDirX = !editDirX;
-    dirXInput = atof(dirXInputText);
+    // --- Rotation Axis ---
+    GuiLabel({ panel.x + 10, panel.y + 75, 100, 25 }, "Rotation Axis X:");
+    if (GuiTextBox({ panel.x + 120, panel.y + 75, 80, 25 }, rotationXInputText, 32, editRotationX))
+        editRotationX = !editRotationX;
+    rotationXInput = atof(rotationXInputText);
 
-    GuiLabel({ panel.x + 190, panel.y + 75, 80, 25 }, "Y:");
-    if (GuiTextBox({ panel.x + 220, panel.y + 75, 80, 25 }, dirYInputText, 32, editDirY))
-        editDirY = !editDirY;
-    dirYInput = atof(dirYInputText);
+    GuiLabel({ panel.x + 210, panel.y + 75, 80, 25 }, "Y:");
+    if (GuiTextBox({ panel.x + 230, panel.y + 75, 80, 25 }, rotationYInputText, 32, editRotationY))
+        editRotationY = !editRotationY;
+    rotationYInput = atof(rotationYInputText);
 
-    GuiLabel({ panel.x + 310, panel.y + 75, 80, 25 }, "Z:");
-    if (GuiTextBox({ panel.x + 340, panel.y + 75, 80, 25 }, dirZInputText, 32, editDirZ))
-        editDirZ = !editDirZ;
-    dirZInput = atof(dirZInputText);
+    GuiLabel({ panel.x + 320, panel.y + 75, 80, 25 }, "Z:");
+    if (GuiTextBox({ panel.x + 340, panel.y + 75, 80, 25 }, rotationZInputText, 32, editRotationZ))
+        editRotationZ = !editRotationZ;
+    rotationZInput = atof(rotationZInputText);
 
-    // --- Tilt ---
-    GuiLabel({ panel.x + 10, panel.y + 110, 80, 25 }, "Tilt Angle:");
-    if (GuiTextBox({ panel.x + 100, panel.y + 110, 80, 25 }, tiltInputText, 32, editTilt))
-        editTilt = !editTilt;
-    tiltInput = atof(tiltInputText);
+    // --- Rotation Angle ---
+    GuiLabel({ panel.x + 10, panel.y + 110, 100, 25 }, "Rotation Angle:");
+    if (GuiTextBox({ panel.x + 120, panel.y + 110, 80, 25 }, rotationAngleInputText, 32, editRotationAngle))
+        editRotationAngle = !editRotationAngle;
+    rotationAngleInput = atof(rotationAngleInputText);
 
-    if (GuiButton({ panel.x + 200, panel.y + 110, 120, 25 }, "Reset Position")) {
+    // --- Preset Rotation Buttons ---
+    if (GuiButton({ panel.x + 220, panel.y + 110, 80, 25 }, "X-Axis")) {
+        rotationXInput = 1.0f; rotationYInput = 0.0f; rotationZInput = 0.0f;
+        snprintf(rotationXInputText, sizeof(rotationXInputText), "1.0");
+        snprintf(rotationYInputText, sizeof(rotationYInputText), "0.0");
+        snprintf(rotationZInputText, sizeof(rotationZInputText), "0.0");
+    }
+    if (GuiButton({ panel.x + 310, panel.y + 110, 80, 25 }, "Y-Axis")) {
+        rotationXInput = 0.0f; rotationYInput = 1.0f; rotationZInput = 0.0f;
+        snprintf(rotationXInputText, sizeof(rotationXInputText), "0.0");
+        snprintf(rotationYInputText, sizeof(rotationYInputText), "1.0");
+        snprintf(rotationZInputText, sizeof(rotationZInputText), "0.0");
+    }
+    if (GuiButton({ panel.x + 400, panel.y + 110, 80, 25 }, "Z-Axis")) {
+        rotationXInput = 0.0f; rotationYInput = 0.0f; rotationZInput = 1.0f;
+        snprintf(rotationXInputText, sizeof(rotationXInputText), "0.0");
+        snprintf(rotationYInputText, sizeof(rotationYInputText), "0.0");
+        snprintf(rotationZInputText, sizeof(rotationZInputText), "1.0");
+    }
+
+    if (GuiButton({ panel.x + 10, panel.y + 145, 120, 25 }, "Reset All")) {
+        // —брос позиции
         posXInput = 0.0f; posYInput = 0.0f; posZInput = 0.0f;
-        dirXInput = 0.0f; dirYInput = 0.0f; dirZInput = 1.0f;
-        tiltInput = 0.0f;
-        snprintf(posXInputText, sizeof(posXInputText), "0");
-        snprintf(posYInputText, sizeof(posYInputText), "0");
-        snprintf(posZInputText, sizeof(posZInputText), "0");
-        snprintf(dirXInputText, sizeof(dirXInputText), "0");
-        snprintf(dirYInputText, sizeof(dirYInputText), "0");
-        snprintf(dirZInputText, sizeof(dirZInputText), "1");
-        snprintf(tiltInputText, sizeof(tiltInputText), "0");
+        snprintf(posXInputText, sizeof(posXInputText), "0.0");
+        snprintf(posYInputText, sizeof(posYInputText), "0.0");
+        snprintf(posZInputText, sizeof(posZInputText), "0.0");
+
+        // —брос поворота 
+        rotationXInput = 0.0f; rotationYInput = 1.0f; rotationZInput = 0.0f;
+        rotationAngleInput = 0.0f;
+        snprintf(rotationXInputText, sizeof(rotationXInputText), "0.0");
+        snprintf(rotationYInputText, sizeof(rotationYInputText), "1.0");
+        snprintf(rotationZInputText, sizeof(rotationZInputText), "0.0");
+        snprintf(rotationAngleInputText, sizeof(rotationAngleInputText), "0.0");
     }
 }
 
@@ -309,5 +314,10 @@ Vector3D UI::GetCurrentDirection() const
 
 float UI::GetCurrentTilt() const
 {
-    return tiltInput;
+    return rotationAngleInput;
+}
+
+Vector3D UI::GetCurrentRotationAxis() const
+{
+    return Vector3D{ rotationXInput, rotationYInput, rotationZInput };
 }

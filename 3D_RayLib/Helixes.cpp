@@ -27,27 +27,61 @@ double Helixes::GetRadius() const
     return 0.0;
 }
 
-void Helixes::Draw(double t, const Point3D& position, float rotationAngle) const
+void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const Vector3& rotationAxis) const
 {
     const int segments = 720;
     const int turns = 2;
     const float angleStep = 2 * PI / segments;
 
-    auto RotateY = [](const Vector3& point, float angleDeg, const Vector3& center) -> Vector3 {
+    auto RotatePoint = [](const Vector3& point, float angleDeg, const Vector3& axis, const Vector3& center) -> Vector3 {
         float rad = angleDeg * (PI / 180.0f);
         float cosA = cos(rad);
         float sinA = sin(rad);
 
-        float x = point.x - center.x;
-        float z = point.z - center.z;
+        // Ручная нормализация вектора оси
+        Vector3 normalizedAxis = axis;
+        float length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+        if (length > 0) {
+            normalizedAxis.x = axis.x / length;
+            normalizedAxis.y = axis.y / length;
+            normalizedAxis.z = axis.z / length;
+        }
 
-        float xr = x * cosA - z * sinA + center.x;
-        float zr = x * sinA + z * cosA + center.z;
+        float x = normalizedAxis.x;
+        float y = normalizedAxis.y;
+        float z = normalizedAxis.z;
 
-        return { xr, point.y, zr };
+        // Перенос точки в начало координат
+        Vector3 translated = {
+            point.x - center.x,
+            point.y - center.y,
+            point.z - center.z
         };
 
-    // Рисуем саму спираль
+        // Матрица поворота вокруг произвольной оси
+        float oneMinusCos = 1.0f - cosA;
+
+        float rotatedX = translated.x * (cosA + x * x * oneMinusCos) +
+            translated.y * (x * y * oneMinusCos - z * sinA) +
+            translated.z * (x * z * oneMinusCos + y * sinA);
+
+        float rotatedY = translated.x * (y * x * oneMinusCos + z * sinA) +
+            translated.y * (cosA + y * y * oneMinusCos) +
+            translated.z * (y * z * oneMinusCos - x * sinA);
+
+        float rotatedZ = translated.x * (z * x * oneMinusCos - y * sinA) +
+            translated.y * (z * y * oneMinusCos + x * sinA) +
+            translated.z * (cosA + z * z * oneMinusCos);
+
+        // Обратный перенос
+        return {
+            rotatedX + center.x,
+            rotatedY + center.y,
+            rotatedZ + center.z
+        };
+        };
+
+    // рисуем саму спираль
     for (int i = 0; i < segments * turns; i++) {
         float angle1 = i * angleStep;
         float angle2 = (i + 1) * angleStep;
@@ -59,25 +93,27 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle) const
                        position.y + (float)(radius * sin(angle2)),
                        position.z + (float)(step * angle2 / (2 * M_PI)) };
 
-        v1 = RotateY(v1, rotationAngle, position);
-        v2 = RotateY(v2, rotationAngle, position);
+        v1 = RotatePoint(v1, rotationAngle, rotationAxis, position);
+        v2 = RotatePoint(v2, rotationAngle, rotationAxis, position);
 
         DrawLine3D(v1, v2, ORANGE);
     }
 
-    // Рисуем шар в текущей точке t
+    // риусем шар в текущей точке t
     Point3D current = GetPoint(t);
     Vector3 pointPos = { position.x + current.x, position.y + current.y, position.z + current.z };
-    pointPos = RotateY(pointPos, rotationAngle, position);
+
+    pointPos = RotatePoint(pointPos, rotationAngle, rotationAxis, position);
 
     DrawSphere(pointPos, 0.1f, RED);
 
-    // Рисуем производную (касательный вектор)
+    // рисуем производную (касательный вектор)
     Vector3D derivative = GetDerivative(t);
     Vector3 endPoint = { pointPos.x + derivative.x * 0.3f,
                          pointPos.y + derivative.y * 0.3f,
                          pointPos.z + derivative.z * 0.3f };
-    endPoint = RotateY(endPoint, rotationAngle, position);
+
+    endPoint = RotatePoint(endPoint, rotationAngle, rotationAxis, position);
 
     DrawLine3D(pointPos, endPoint, BLACK);
 }
