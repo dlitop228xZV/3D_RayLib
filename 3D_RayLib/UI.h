@@ -30,7 +30,7 @@ private:
     bool editTilt = false;
 
     float rotationXInput = 0.0f;
-    float rotationYInput = 1.0f;  // По умолчанию ось Y
+    float rotationYInput = 1.0f;
     float rotationZInput = 0.0f;
     float rotationAngleInput = 0.0f;
 
@@ -48,7 +48,7 @@ private:
     Rectangle main = { 0,0,size,size };
     bool IsOpen = false;
 
-    // UI элементы для создания фигур
+    // Для создания фигур
     int selectedCurveType = 0; // 0: Circle, 1: Ellipse, 2: Helix
     float radiusInput = 1.0f;
     float radiusXInput = 1.0f;
@@ -56,7 +56,7 @@ private:
     float stepInput = 0.5f;
     int selectedCurveIndex = 0;
 
-    // Поля для позиции, направления и наклона
+    // Позиция, направление и наклон
     float posXInput = 0.0f;
     float posYInput = 0.0f;
     float posZInput = 0.0f;
@@ -67,7 +67,7 @@ private:
 
     char radiusInputText[32] = "1.0";
     char radiusXInputText[32] = "1.0";
-    char radiusYInputText[32] = "1.0";
+    char radiusYInputText[32] = "0.5";
     char stepInputText[32] = "0.5";
     char posXInputText[32] = "0.0";
     char posYInputText[32] = "0.0";
@@ -84,6 +84,7 @@ private:
     void DrawPositionPanel();
 
 public:
+
     Vector3D GetCurrentRotationAxis() const;
     std::vector<std::shared_ptr<Curve>> customCurves;
     std::vector<std::shared_ptr<Circle>> customCircles;

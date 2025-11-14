@@ -31,11 +31,18 @@ void UI::DrawCurveCreationPanel()
 
     GuiLabel({ panel.x + 10, panel.y + 40, 100, 25 }, "Curve Type:");
 
-    if (GuiDropdownBox({ panel.x + 120, panel.y + 40, 150, 25 },
-        "Circle;Ellipse;Helix", &selectedCurveType, dropDownEdit))
-    {
-        dropDownEdit = !dropDownEdit;
+    if (GuiButton({ panel.x + 120, panel.y + 40, 80, 25 }, "Circle")) {
+        selectedCurveType = 0;
     }
+    if (GuiButton({ panel.x + 210, panel.y + 40, 80, 25 }, "Ellipse")) {
+        selectedCurveType = 1;
+    }
+    if (GuiButton({ panel.x + 300, panel.y + 40, 80, 25 }, "Helix")) {
+        selectedCurveType = 2;
+    }
+
+    const char* curveTypes[] = { "Circle", "Ellipse", "Helix" };
+    DrawText(TextFormat("Selected: %s", curveTypes[selectedCurveType]), panel.x + 400, panel.y + 45, 16, DARKGRAY);
 
     // поля ввода
     switch (selectedCurveType) {
@@ -109,7 +116,7 @@ void UI::DrawPositionPanel()
 
     DrawText("Position & Orientation", panel.x + 10, panel.y + 10, 20, BLACK);
 
-    // --- Position ---
+    // --- Позиция ---
     GuiLabel({ panel.x + 10, panel.y + 40, 80, 25 }, "Position X:");
     if (GuiTextBox({ panel.x + 100, panel.y + 40, 80, 25 }, posXInputText, 32, editPosX))
         editPosX = !editPosX;
@@ -125,7 +132,7 @@ void UI::DrawPositionPanel()
         editPosZ = !editPosZ;
     posZInput = atof(posZInputText);
 
-    // --- Rotation Axis ---
+    // --- Ротация ---
     GuiLabel({ panel.x + 10, panel.y + 75, 100, 25 }, "Rotation Axis X:");
     if (GuiTextBox({ panel.x + 120, panel.y + 75, 80, 25 }, rotationXInputText, 32, editRotationX))
         editRotationX = !editRotationX;
@@ -141,13 +148,13 @@ void UI::DrawPositionPanel()
         editRotationZ = !editRotationZ;
     rotationZInput = atof(rotationZInputText);
 
-    // --- Rotation Angle ---
+    // --- Угол ротации ---
     GuiLabel({ panel.x + 10, panel.y + 110, 100, 25 }, "Rotation Angle:");
     if (GuiTextBox({ panel.x + 120, panel.y + 110, 80, 25 }, rotationAngleInputText, 32, editRotationAngle))
         editRotationAngle = !editRotationAngle;
     rotationAngleInput = atof(rotationAngleInputText);
 
-    // --- Preset Rotation Buttons ---
+    // --- Кнопки XYZ Ротации ---
     if (GuiButton({ panel.x + 220, panel.y + 110, 80, 25 }, "X-Axis")) {
         rotationXInput = 1.0f; rotationYInput = 0.0f; rotationZInput = 0.0f;
         snprintf(rotationXInputText, sizeof(rotationXInputText), "1.0");
@@ -220,7 +227,7 @@ void UI::DrawCurveListPanel()
             curveInfo = TextFormat("Unknown Curve %d", (int)i + 1);
         }
 
-        // Отображение информации о фигуре
+        // Отображение инфо о фигуре
         DrawText(curveInfo.c_str(), listRect.x + 10, yPos, 16, BLACK);
 
         if (GuiButton({ listRect.x + listRect.width - 100, yPos, 80, 25 }, "Delete")) {

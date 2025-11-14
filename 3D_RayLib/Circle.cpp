@@ -23,13 +23,11 @@ void Circle::Draw(double t, const Point3D& position, float rotationAngle, const 
     const int segments = 360;
     const float angleStep = 2 * PI / segments;
 
-    // Универсальная функция поворота вокруг произвольной оси
     auto RotatePoint = [](const Vector3& point, float angleDeg, const Vector3& axis, const Vector3& center) -> Vector3 {
         float rad = angleDeg * (PI / 180.0f);
         float cosA = cos(rad);
         float sinA = sin(rad);
 
-        // Ручная нормализация вектора оси
         Vector3 normalizedAxis = axis;
         float length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
         if (length > 0) {
@@ -42,14 +40,12 @@ void Circle::Draw(double t, const Point3D& position, float rotationAngle, const 
         float y = normalizedAxis.y;
         float z = normalizedAxis.z;
 
-        // Перенос точки в начало координат
         Vector3 translated = {
             point.x - center.x,
             point.y - center.y,
             point.z - center.z
         };
 
-        // Матрица поворота вокруг произвольной оси
         float oneMinusCos = 1.0f - cosA;
 
         float rotatedX = translated.x * (cosA + x * x * oneMinusCos) +
@@ -64,7 +60,6 @@ void Circle::Draw(double t, const Point3D& position, float rotationAngle, const 
             translated.y * (z * y * oneMinusCos + x * sinA) +
             translated.z * (cosA + z * z * oneMinusCos);
 
-        // Обратный перенос
         return {
             rotatedX + center.x,
             rotatedY + center.y,
@@ -82,8 +77,7 @@ void Circle::Draw(double t, const Point3D& position, float rotationAngle, const 
         Vector3 v2 = { position.x + (float)(radius * cos(angle2)),
                        position.y + (float)(radius * sin(angle2)),
                        position.z };
-
-        // Применяем поворот
+        
         v1 = RotatePoint(v1, rotationAngle, rotationAxis, position);
         v2 = RotatePoint(v2, rotationAngle, rotationAxis, position);
 

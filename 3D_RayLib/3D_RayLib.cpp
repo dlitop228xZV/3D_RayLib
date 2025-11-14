@@ -147,7 +147,7 @@ int main()
 
         DrawGrid(10, 1.0f);
 
-        // Получаем позицию и ориентацию из UI
+        // Позиция и ориентация из UI
         Point3D customPosition = ui.GetCurrentPosition();
         Vector3D customDirection = ui.GetCurrentDirection();
         float customTilt = ui.GetCurrentTilt();

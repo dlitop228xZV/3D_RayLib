@@ -38,7 +38,6 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const
         float cosA = cos(rad);
         float sinA = sin(rad);
 
-        // –учна€ нормализаци€ вектора оси
         Vector3 normalizedAxis = axis;
         float length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
         if (length > 0) {
@@ -51,14 +50,12 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const
         float y = normalizedAxis.y;
         float z = normalizedAxis.z;
 
-        // ѕеренос точки в начало координат
         Vector3 translated = {
             point.x - center.x,
             point.y - center.y,
             point.z - center.z
         };
 
-        // ћатрица поворота вокруг произвольной оси
         float oneMinusCos = 1.0f - cosA;
 
         float rotatedX = translated.x * (cosA + x * x * oneMinusCos) +
@@ -73,7 +70,6 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const
             translated.y * (z * y * oneMinusCos + x * sinA) +
             translated.z * (cosA + z * z * oneMinusCos);
 
-        // ќбратный перенос
         return {
             rotatedX + center.x,
             rotatedY + center.y,
@@ -81,7 +77,6 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const
         };
         };
 
-    // рисуем саму спираль
     for (int i = 0; i < segments * turns; i++) {
         float angle1 = i * angleStep;
         float angle2 = (i + 1) * angleStep;
@@ -99,7 +94,6 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const
         DrawLine3D(v1, v2, ORANGE);
     }
 
-    // риусем шар в текущей точке t
     Point3D current = GetPoint(t);
     Vector3 pointPos = { position.x + current.x, position.y + current.y, position.z + current.z };
 
@@ -107,7 +101,6 @@ void Helixes::Draw(double t, const Point3D& position, float rotationAngle, const
 
     DrawSphere(pointPos, 0.1f, RED);
 
-    // рисуем производную (касательный вектор)
     Vector3D derivative = GetDerivative(t);
     Vector3 endPoint = { pointPos.x + derivative.x * 0.3f,
                          pointPos.y + derivative.y * 0.3f,

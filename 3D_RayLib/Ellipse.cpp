@@ -34,7 +34,6 @@ void Ellipse::Draw(double t, const Point3D& position, float rotationAngle, const
         float cosA = cos(rad);
         float sinA = sin(rad);
 
-        // Ручная нормализация вектора оси
         Vector3 normalizedAxis = axis;
         float length = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
         if (length > 0) {
@@ -47,14 +46,12 @@ void Ellipse::Draw(double t, const Point3D& position, float rotationAngle, const
         float y = normalizedAxis.y;
         float z = normalizedAxis.z;
 
-        // Перенос точки в начало координат
         Vector3 translated = {
             point.x - center.x,
             point.y - center.y,
             point.z - center.z
         };
 
-        // Матрица поворота вокруг произвольной оси
         float oneMinusCos = 1.0f - cosA;
 
         float rotatedX = translated.x * (cosA + x * x * oneMinusCos) +
@@ -69,7 +66,6 @@ void Ellipse::Draw(double t, const Point3D& position, float rotationAngle, const
             translated.y * (z * y * oneMinusCos + x * sinA) +
             translated.z * (cosA + z * z * oneMinusCos);
 
-        // Обратный перенос
         return {
             rotatedX + center.x,
             rotatedY + center.y,
